@@ -17,7 +17,7 @@ public class Theater {
         Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90), 12.5, 1);
         Movie turningRed = new Movie("Turning Red", Duration.ofMinutes(85), 11, 0);
         Movie theBatMan = new Movie("The Batman", Duration.ofMinutes(95), 9, 0);
-        schedule = List.of(
+        this.schedule = List.of(
             new Showing(turningRed, 1, LocalDateTime.of(provider.currentDate(), LocalTime.of(9, 0))),
             new Showing(spiderMan, 2, LocalDateTime.of(provider.currentDate(), LocalTime.of(11, 0))),
             new Showing(theBatMan, 3, LocalDateTime.of(provider.currentDate(), LocalTime.of(12, 50))),
@@ -39,6 +39,10 @@ public class Theater {
             throw new IllegalStateException("not able to find any showing for given sequence " + sequence);
         }
         return new Reservation(customer, showing, howManyTickets);
+    }
+
+    public List<Showing> getSchedule(){
+        return this.schedule;
     }
 
     public void printSchedule() {
@@ -70,5 +74,22 @@ public class Theater {
     public static void main(String[] args) {
         Theater theater = new Theater(LocalDateProvider.singleton());
         theater.printSchedule();
+       
+        //Add new customer 
+        Customer customer = new Customer("Guillermo", "1");
+        System.out.println(customer.toString()); 
+
+        //Get theater schedule to get showings 
+        List<Showing> schedule = theater.getSchedule();
+        //System.out.println(schedule);
+
+        //Get Turning Red Showing
+        Showing turningRed1 = schedule.get(0);
+
+        //Guillermo Reservation
+        Reservation guillermoReservation = new Reservation(customer, turningRed1, 1);
+        guillermoReservation.printReservation();
+
+
     }
 }
