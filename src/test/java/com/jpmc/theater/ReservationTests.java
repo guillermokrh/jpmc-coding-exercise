@@ -17,6 +17,6 @@ public class ReservationTests {
                 1,
                 LocalDateTime.now()
         );
-        assertTrue(new Reservation(customer, showing, 3).totalFee() == 37.5);
+        assertTrue(new Reservation(customer, showing, 3).totalFee() == 28.5);
     }
 }
