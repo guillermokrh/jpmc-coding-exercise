@@ -31,41 +31,40 @@ public class Showing {
     }
 
 
-    // Add date/time logic here 
+    //Get 25% discount if movie shown between 11:00AM and 4PM  
     public double getTimeDiscount(){
         double timeDiscount = 0;
-        //Time Discount
-        LocalDateProvider dateProvider = LocalDateProvider.singleton(); 
-        LocalDateTime min = LocalDateTime.of(dateProvider.currentDate(), LocalTime.of(11, 0));
-        LocalDateTime max = LocalDateTime.of(dateProvider.currentDate(), LocalTime.of(16, 0));
+        LocalTime min = LocalTime.of(10, 59);
+        LocalTime max = LocalTime.of(16, 0);
+        LocalTime showTime = showStartTime.toLocalTime();
 
-        if ((showStartTime.isAfter(min) || showStartTime.isEqual(min)) && showStartTime.isBefore(max)){
+        if (showTime.isAfter(min) && showTime.isBefore(max)){
            timeDiscount = movie.getTicketPrice() * 0.25;
         }
 
        return timeDiscount;
     }
 
+    //Get $1 discount if movie is shown on 7th of the month
     public double getDateDiscount(){
         double dateDiscount = 0;
-        //Day discount
-        LocalDateProvider dateProvider = LocalDateProvider.singleton(); 
-        LocalDate today = dateProvider.currentDate();
-        LocalDate monthDay7 = LocalDate.of(dateProvider.currentDate().getYear(), dateProvider.currentDate().getMonthValue(), 7);
-        if (today.isEqual(monthDay7)){
+        int showDay = showStartTime.toLocalDate().getDayOfMonth(); 
+        if (showDay == 7){
             dateDiscount = 1;
         }
 
         return dateDiscount;
     }
 
+    //Get $3 discount if movie is first movie shown of the day
+    //Get $2 discount if movie is the second movie shown of the day 
     public double getSequenceDiscount(){
 
         double sequenceDiscount = 0;
         if (sequenceOfTheDay == 1) {
-            sequenceDiscount = 3; // $3 discount for 1st show
+            sequenceDiscount = 3; 
         } else if (sequenceOfTheDay == 2) {
-            sequenceDiscount = 2; // $2 discount for 2nd show
+            sequenceDiscount = 2; 
         }
         return sequenceDiscount;
     }
@@ -81,8 +80,7 @@ public class Showing {
         double ticketPrice = getFaceValuePrice() - calculateDiscount();
 
         //Round ticket price as needed
-        ticketPrice = Math.round(ticketPrice * 100.0);
-        ticketPrice = ticketPrice/100.0;
+        ticketPrice = (double) Math.round(ticketPrice * 100.0)/100;
 
         return ticketPrice;
     }

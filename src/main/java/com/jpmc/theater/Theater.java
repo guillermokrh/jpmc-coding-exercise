@@ -1,6 +1,7 @@
 package com.jpmc.theater;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -8,28 +9,25 @@ import java.util.concurrent.TimeUnit;
 
 public class Theater {
 
-    LocalDateProvider provider;
+    LocalDate date;
     private List<Showing> schedule;
 
-    public Theater(LocalDateProvider provider) {
-        this.provider = provider;
+    public Theater(LocalDate date) {
+        this.date = date;
 
-        //Spiderman, Price: 12.50, Special Movie
         Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90), 12.5, 1, .2);
-        //Turning Red, Price: 11
-        Movie turningRed = new Movie("Turning Red", Duration.ofMinutes(85), 11, 0, .2);
-        //The Batman, Price: 9
-        Movie theBatMan = new Movie("The Batman", Duration.ofMinutes(95), 9, 0, .2);
+        Movie turningRed = new Movie("Turning Red", Duration.ofMinutes(85), 11, 0, 0);
+        Movie theBatMan = new Movie("The Batman", Duration.ofMinutes(95), 9, 0, 0);
         this.schedule = List.of(
-            new Showing(turningRed, 1, LocalDateTime.of(provider.currentDate(), LocalTime.of(9, 0))),
-            new Showing(spiderMan, 2, LocalDateTime.of(provider.currentDate(), LocalTime.of(11, 0))),
-            new Showing(theBatMan, 3, LocalDateTime.of(provider.currentDate(), LocalTime.of(12, 50))),
-            new Showing(turningRed, 4, LocalDateTime.of(provider.currentDate(), LocalTime.of(14, 30))),
-            new Showing(spiderMan, 5, LocalDateTime.of(provider.currentDate(), LocalTime.of(16, 10))),
-            new Showing(theBatMan, 6, LocalDateTime.of(provider.currentDate(), LocalTime.of(17, 50))),
-            new Showing(turningRed, 7, LocalDateTime.of(provider.currentDate(), LocalTime.of(19, 30))),
-            new Showing(spiderMan, 8, LocalDateTime.of(provider.currentDate(), LocalTime.of(21, 10))),
-            new Showing(theBatMan, 9, LocalDateTime.of(provider.currentDate(), LocalTime.of(23, 0)))
+            new Showing(turningRed, 1, LocalDateTime.of(date, LocalTime.of(9, 0))),
+            new Showing(spiderMan, 2, LocalDateTime.of(date, LocalTime.of(11, 0))),
+            new Showing(theBatMan, 3, LocalDateTime.of(date, LocalTime.of(12, 50))),
+            new Showing(turningRed, 4, LocalDateTime.of(date, LocalTime.of(14, 30))),
+            new Showing(spiderMan, 5, LocalDateTime.of(date, LocalTime.of(16, 10))),
+            new Showing(theBatMan, 6, LocalDateTime.of(date, LocalTime.of(17, 50))),
+            new Showing(turningRed, 7, LocalDateTime.of(date, LocalTime.of(19, 30))),
+            new Showing(spiderMan, 8, LocalDateTime.of(date, LocalTime.of(21, 10))),
+            new Showing(theBatMan, 9, LocalDateTime.of(date, LocalTime.of(23, 0)))
         );
     }
 
@@ -49,7 +47,7 @@ public class Theater {
     }
 
     public void printSchedule() {
-        System.out.println(provider.currentDate());
+        System.out.println(date);
         System.out.println("===================================================");
         schedule.forEach(s ->
                 System.out.println(s.getSequenceOfTheDay() + ": " + s.getStartTime() + " " + s.getMovie().getTitle() + " " + humanReadableFormat(s.getMovie().getRunningTime()) + " $" + s.getFaceValuePrice())
@@ -60,14 +58,14 @@ public class Theater {
     public void printJSON() {
         System.out.println("{");
         System.out.println("  \"theater\": [");
-        System.out.println("     \"date\": " + "\"" + provider.currentDate() + "\",");
+        System.out.println("     \"date\": " + "\"" + date + "\",");
         System.out.println("     \"showings\": [");
         for (int i = 0; i < schedule.size(); i++){
             System.out.println("      {");
-            System.out.println("         \"sequence\": " + "\"" +schedule.get(i).getSequenceOfTheDay() + "\"");
-            System.out.println("         \"startTime\": " + "\"" + schedule.get(i).getStartTime() + "\"");
-            System.out.println("         \"movieTitle\": " + "\"" +schedule.get(i).getMovie().getTitle() + "\"");
-            System.out.println("         \"runningTime\": " + "\"" + humanReadableFormat(schedule.get(i).getMovie().getRunningTime()) + "\"");
+            System.out.println("         \"sequence\": " + "\"" +schedule.get(i).getSequenceOfTheDay() + "\",");
+            System.out.println("         \"startTime\": " + "\"" + schedule.get(i).getStartTime() + "\",");
+            System.out.println("         \"movieTitle\": " + "\"" +schedule.get(i).getMovie().getTitle() + "\",");
+            System.out.println("         \"runningTime\": " + "\"" + humanReadableFormat(schedule.get(i).getMovie().getRunningTime()) + "\",");
             System.out.println("         \"price\": \"$" + schedule.get(i).getFaceValuePrice() + "\"");
             if (i < schedule.size()-1){
                 System.out.println("      },");
@@ -98,7 +96,13 @@ public class Theater {
     }
 
     public static void main(String[] args) {
-        Theater theater = new Theater(LocalDateProvider.singleton());
+
+        //Today's Date
+        LocalDateProvider dateProvider = LocalDateProvider.singleton();
+        LocalDate today = dateProvider.currentDate();
+        LocalDate aug7 = LocalDate.of(2022, 8, 7);
+
+        Theater theater = new Theater(aug7);
         theater.printSchedule();
        
         //Add new customer, Guillermo 
@@ -115,7 +119,6 @@ public class Theater {
 
         //Get theater schedule to get showings 
         List<Showing> schedule = theater.getSchedule();
-        //System.out.println(schedule);
 
         //Get Turning Red Showing
         Showing turningRed1 = schedule.get(0);
@@ -130,12 +133,12 @@ public class Theater {
         guillermoReservation.printReservation();
 
         //Kimberly Reservation
-        //Should have 20% discount and $2 discount, which is 20% discount
+        //Should have 25% discount
         Reservation kimberlyReservation = new Reservation(customerKim, spiderman2, 1);
         kimberlyReservation.printReservation();
 
         //Antonio Reservation
-        //Should have no discount 
+        //Should have 25% dicount 
         Reservation antonioReservation = new Reservation(customerAntonio, batman, 3);
         antonioReservation.printReservation();
 

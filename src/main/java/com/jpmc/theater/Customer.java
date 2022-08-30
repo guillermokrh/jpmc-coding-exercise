@@ -5,7 +5,6 @@ import java.util.Objects;
 public class Customer {
 
     private String name;
-
     private String id;
 
     /**
@@ -32,6 +31,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "name: " + name;
+        return name;
     }
 }

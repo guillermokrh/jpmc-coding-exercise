@@ -33,10 +33,11 @@ public class Movie {
         return ticketPrice;
     }
 
+    //Calculate Special Code Discount
     public double getSpecialCodeDiscount() {
         double specialDiscount = 0;
         if (specialCode == MOVIE_CODE_SPECIAL) {
-            specialDiscount = ticketPrice * specialCodeDiscountPercent;  // 20% discount for special movie
+            specialDiscount = ticketPrice * specialCodeDiscountPercent;  
         }
 
         return specialDiscount;
