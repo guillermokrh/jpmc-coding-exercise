@@ -57,6 +57,29 @@ public class Theater {
         System.out.println("===================================================");
     }
 
+    public void printJSON() {
+        System.out.println("{");
+        System.out.println("  \"theater\": [");
+        System.out.println("     \"date\": " + "\"" + provider.currentDate() + "\",");
+        System.out.println("     \"showings\": [");
+        for (int i = 0; i < schedule.size(); i++){
+            System.out.println("      {");
+            System.out.println("         \"sequence\": " + "\"" +schedule.get(i).getSequenceOfTheDay() + "\"");
+            System.out.println("         \"startTime\": " + "\"" + schedule.get(i).getStartTime() + "\"");
+            System.out.println("         \"movieTitle\": " + "\"" +schedule.get(i).getMovie().getTitle() + "\"");
+            System.out.println("         \"runningTime\": " + "\"" + humanReadableFormat(schedule.get(i).getMovie().getRunningTime()) + "\"");
+            System.out.println("         \"price\": \"$" + schedule.get(i).getFaceValueFee() + "\"");
+            if (i < schedule.size()-1){
+                System.out.println("      },");
+            } else {
+                System.out.println("      }");
+            }
+        }
+        System.out.println("    ]");
+        System.out.println("  ]");
+        System.out.println("}");
+    }
+
     public String humanReadableFormat(Duration duration) {
         long hour = duration.toHours();
         long remainingMin = duration.toMinutes() - TimeUnit.HOURS.toMinutes(duration.toHours());
@@ -111,9 +134,11 @@ public class Theater {
         Reservation kimberlyReservation = new Reservation(customerKim, spiderman2, 1);
         kimberlyReservation.printReservation();
 
-        //Yonit Reservation
+        //Antonio Reservation
         //Should have no discount 
         Reservation antonioReservation = new Reservation(customerAntonio, batman, 3);
         antonioReservation.printReservation();
+
+        theater.printJSON();
     }
 }

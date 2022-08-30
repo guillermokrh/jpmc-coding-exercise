@@ -23,6 +23,7 @@ public class Reservation {
         return pricePerTicket;
     }
 
+
     public void printReservation(){
         System.out.println("===================================================");
         System.out.println("Customer: " + customer.toString());
