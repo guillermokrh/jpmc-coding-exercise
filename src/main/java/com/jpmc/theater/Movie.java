@@ -11,12 +11,14 @@ public class Movie {
     private Duration runningTime;
     private double ticketPrice;
     private int specialCode;
+    private double specialCodeDiscountPercent;
 
-    public Movie(String title, Duration runningTime, double ticketPrice, int specialCode) {
+    public Movie(String title, Duration runningTime, double ticketPrice, int specialCode, double discountPercent) {
         this.title = title;
         this.runningTime = runningTime;
         this.ticketPrice = ticketPrice;
         this.specialCode = specialCode;
+        this.specialCodeDiscountPercent = discountPercent;
     }
 
     public String getTitle() {
@@ -34,7 +36,7 @@ public class Movie {
     public double getSpecialCodeDiscount() {
         double specialDiscount = 0;
         if (specialCode == MOVIE_CODE_SPECIAL) {
-            specialDiscount = ticketPrice * 0.2;  // 20% discount for special movie
+            specialDiscount = ticketPrice * specialCodeDiscountPercent;  // 20% discount for special movie
         }
 
         return specialDiscount;
