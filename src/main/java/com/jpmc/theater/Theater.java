@@ -52,7 +52,7 @@ public class Theater {
         System.out.println(provider.currentDate());
         System.out.println("===================================================");
         schedule.forEach(s ->
-                System.out.println(s.getSequenceOfTheDay() + ": " + s.getStartTime() + " " + s.getMovie().getTitle() + " " + humanReadableFormat(s.getMovie().getRunningTime()) + " $" + s.getFaceValueFee())
+                System.out.println(s.getSequenceOfTheDay() + ": " + s.getStartTime() + " " + s.getMovie().getTitle() + " " + humanReadableFormat(s.getMovie().getRunningTime()) + " $" + s.getFaceValuePrice())
         );
         System.out.println("===================================================");
     }
@@ -68,7 +68,7 @@ public class Theater {
             System.out.println("         \"startTime\": " + "\"" + schedule.get(i).getStartTime() + "\"");
             System.out.println("         \"movieTitle\": " + "\"" +schedule.get(i).getMovie().getTitle() + "\"");
             System.out.println("         \"runningTime\": " + "\"" + humanReadableFormat(schedule.get(i).getMovie().getRunningTime()) + "\"");
-            System.out.println("         \"price\": \"$" + schedule.get(i).getFaceValueFee() + "\"");
+            System.out.println("         \"price\": \"$" + schedule.get(i).getFaceValuePrice() + "\"");
             if (i < schedule.size()-1){
                 System.out.println("      },");
             } else {

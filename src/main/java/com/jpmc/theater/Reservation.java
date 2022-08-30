@@ -12,7 +12,7 @@ public class Reservation {
         this.showing = showing;
         this.audienceCount = audienceCount;
         this.movie = showing.getMovie();
-        this.pricePerTicket = showing.getDiscountFee();
+        this.pricePerTicket = showing.calculateTicketPrice();
     }
 
     public double totalFee() {
@@ -22,7 +22,6 @@ public class Reservation {
     public double pricePerTicket() {
         return pricePerTicket;
     }
-
 
     public void printReservation(){
         System.out.println("===================================================");

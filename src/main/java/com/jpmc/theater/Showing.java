@@ -1,6 +1,11 @@
 package com.jpmc.theater;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.time.LocalDate;
 
 public class Showing {
     private Movie movie;
@@ -25,11 +30,64 @@ public class Showing {
         return this.sequenceOfTheDay == sequence;
     }
 
-    public double getDiscountFee() {
-        return movie.calculateTicketPrice(this);
+
+    // Add date/time logic here 
+    public double getTimeDiscount(){
+        double timeDiscount = 0;
+        //Time Discount
+        LocalDateProvider dateProvider = LocalDateProvider.singleton(); 
+        LocalDateTime min = LocalDateTime.of(dateProvider.currentDate(), LocalTime.of(11, 0));
+        LocalDateTime max = LocalDateTime.of(dateProvider.currentDate(), LocalTime.of(16, 0));
+
+        if ((showStartTime.isAfter(min) || showStartTime.isEqual(min)) && showStartTime.isBefore(max)){
+           timeDiscount = movie.getTicketPrice() * 0.25;
+        }
+
+       return timeDiscount;
     }
 
-    public double getFaceValueFee(){
+    public double getDateDiscount(){
+        double dateDiscount = 0;
+        //Day discount
+        LocalDateProvider dateProvider = LocalDateProvider.singleton(); 
+        LocalDate today = dateProvider.currentDate();
+        LocalDate monthDay7 = LocalDate.of(dateProvider.currentDate().getYear(), dateProvider.currentDate().getMonthValue(), 7);
+        if (today.isEqual(monthDay7)){
+            dateDiscount = 1;
+        }
+
+        return dateDiscount;
+    }
+
+    public double getSequenceDiscount(){
+
+        double sequenceDiscount = 0;
+        if (sequenceOfTheDay == 1) {
+            sequenceDiscount = 3; // $3 discount for 1st show
+        } else if (sequenceOfTheDay == 2) {
+            sequenceDiscount = 2; // $2 discount for 2nd show
+        }
+        return sequenceDiscount;
+    }
+
+    public double calculateDiscount() {
+        List<Double> discounts = Arrays.asList(getTimeDiscount(), getDateDiscount(), getSequenceDiscount(), movie.getSpecialCodeDiscount());
+        Double maximumDiscount = Collections.max(discounts);
+
+        return maximumDiscount;
+    }
+
+    public double calculateTicketPrice() {
+        double ticketPrice = getFaceValuePrice() - calculateDiscount();
+
+        //Round ticket price as needed
+        ticketPrice = Math.round(ticketPrice * 100.0);
+        ticketPrice = ticketPrice/100.0;
+
+        return ticketPrice;
+    }
+
+    public double getFaceValuePrice(){
         return movie.getTicketPrice();
     }
 
@@ -38,6 +96,6 @@ public class Showing {
     }
 
     private double calculateFee(int audienceCount) {
-        return movie.calculateTicketPrice(this) * audienceCount;
+        return calculateTicketPrice() * audienceCount;
     }
 }
